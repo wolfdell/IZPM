@@ -1,5 +1,9 @@
 from translations.translation import Translation
 from util.flush import flush_screen
+from util.move import choose_translation_path
+
+import os
+import shutil
 
 import keyboard
 
