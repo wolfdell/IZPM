@@ -1,4 +1,3 @@
-
 # Utility imports
 from translation_utils.translation import Translation
 from util.flush import flush_screen
@@ -21,27 +20,6 @@ translations = []
 show_all_menu   = ShowAllMenu()
 help_menu       = HelpMenu()
 comment_menu    = CommentSectionMenu()
-
-def new_translation():
-    translator_name, redactor_name, typesetter_name = get_manga_name()
-    manga_name, manga_chapter, manga_volume, translators = get_manga_info()
-    extention_name = input("Какъв искате да бъде екстеншъна на мангата: ")
-
-    translation = Translation(manga_name, manga_volume, manga_chapter, translator_name, redactor_name, typesetter_name, extention_name)
-    translations.append(translation)
-
-    # TODO: Проблем при инициализирането на пътя, трябва да отваря папката и файла, но не ги създава.
-    file_name = translation.create_path() + self.create_file_name()
-
-    print("\x1b[0;36;40m[+]\x1b[0m В този случай, името на файла ще бъде:", '\x1b[0;36;40m' + file_name + '\x1b[0m')
-    print()
-    to_continue = input("Да продължим ли към сесията за превод \x1b[0;36;40m[да/не]\x1b[0m: ")
-    if to_continue.lower() == "да":
-        translation_period(file_name, translator_name, redactor_name, typesetter_name)
-    else:
-        print("Добре, значи днес няма да превеждаме...")
-        print()
-
 
 def translation_period(file_name, translator, editor, typesetter):
     flush_screen()
@@ -97,28 +75,6 @@ def translation_period(file_name, translator, editor, typesetter):
 def show_translation(index):
     translations[index - 1].metadata_out()
     print()
-
-def get_manga_info():
-    flush_screen()
-    print('\x1b[6;30;42m' + ' Нека разбера малко още за превода ' + '\x1b[0m')
-    manga_name = input("Името на мангата: ")
-    manga_chapter = input("Главата: ")
-    manga_volume = input("Том: ")
-    translators = input("Преводаческа група: ")
-
-    return manga_name, manga_chapter, manga_volume, translators
-
-def get_manga_name():
-    flush_screen()
-    print('\x1b[6;30;42m' + ' Кажи ми малко за екипа ' + '\x1b[0m')
-    translator_name = input("Име на преводача: ")
-    redactor_name = input("Име на редактора: ")
-    typesetter_name = input("Име на тайпсетъра: ")
-
-    #if translator_name == redactor_name and redactor_name == typesetter_name:
-        #is_one_person = input("Да разбирам ли, че само един човек работи върху превода[да/не]: ") 
-
-    return translator_name, redactor_name, typesetter_name
 
 def show_all():
     flush_screen()
