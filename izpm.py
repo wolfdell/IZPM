@@ -1,16 +1,24 @@
-from translations.translation import Translation
+
+# Utility imports
+from translation_utils.translation import Translation
 from util.flush import flush_screen
 from util.move import choose_translation_path
 
+# Translation menu imports
+from menus.showall_menu import ShowAllMenu
+
+# Python source imports
 import os
 import shutil
-
 import keyboard
 
-# Инструмент за превод на манга
+# Translation holder (current state)
 translations = []
 
-# Секция "Помощ"
+# Menus initialization
+show_all_menu = ShowAllMenu()
+
+
 def spawn_help():
     flush_screen()
     print('\x1b[6;30;42m' + ' Меню за помощ ' + '\x1b[0m')
@@ -20,7 +28,6 @@ def spawn_help():
     print("'\x1b[0;36;40mизход\x1b[0m'             - спира изпълнението на програмата")
     print()
 
-# Секция "Нов превод"
 def new_translation():
     translator_name, redactor_name, typesetter_name = get_manga_name()
     manga_name, manga_chapter, manga_volume, translators = get_manga_info()
@@ -29,7 +36,8 @@ def new_translation():
     translation = Translation(manga_name, manga_volume, manga_chapter, translator_name, redactor_name, typesetter_name, extention_name)
     translations.append(translation)
 
-    file_name = translation.get_filename()
+    # TODO: Проблем при инициализирането на пътя, трябва да отваря папката и файла, но не ги създава.
+    file_name = translation.create_path() + self.create_file_name()
 
     print("\x1b[0;36;40m[+]\x1b[0m В този случай, името на файла ще бъде:", '\x1b[0;36;40m' + file_name + '\x1b[0m')
     print()
@@ -157,11 +165,18 @@ if __name__ == '__main__':
             flush_screen() 
             break
         if cmd == "нов превод": new_translation()
-        if cmd == "покажи всички": show_all()
+        
+        # Show all translations
+        if cmd == "покажи всички":
+            show_all_menu.spawn()
+
         if "покажи превод" in cmd:
             tokens = cmd.split()
             show_translation(int(tokens[2]))
 
         
 
-    
+#
+#   == IZPM source code ==
+#      wolfdell @ 2023
+#

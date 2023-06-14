@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import curses
 
 class Menu(ABC):
 
