@@ -6,6 +6,8 @@ from util.move import choose_translation_path
 
 # Translation menu imports
 from menus.showall_menu import ShowAllMenu
+from menus.help_menu import HelpMenu
+from menus.comment_menu import CommentSectionMenu
 
 # Python source imports
 import os
@@ -16,17 +18,9 @@ import keyboard
 translations = []
 
 # Menus initialization
-show_all_menu = ShowAllMenu()
-
-
-def spawn_help():
-    flush_screen()
-    print('\x1b[6;30;42m' + ' Меню за помощ ' + '\x1b[0m')
-    print("'\x1b[0;36;40mнов превод\x1b[0m'        - стартира меню за нов превод")
-    print("'\x1b[0;36;40mпокажи превод <х>\x1b[0m' - показва информация за съответната глава")
-    print("'\x1b[0;36;40mпокажи всички\x1b[0m'     - показва всички преводи, направени в настоящата сесия")
-    print("'\x1b[0;36;40mизход\x1b[0m'             - спира изпълнението на програмата")
-    print()
+show_all_menu   = ShowAllMenu()
+help_menu       = HelpMenu()
+comment_menu    = CommentSectionMenu()
 
 def new_translation():
     translator_name, redactor_name, typesetter_name = get_manga_name()
@@ -91,30 +85,14 @@ def translation_period(file_name, translator, editor, typesetter):
             print(f"[стр. {page}/ пан. {panel}]: {line}", file=f)
             panel += 1
 
+    # Check for the comment menu command
     if add_comment:
-        add_comments(file_name)
+        
+        # Set the translation holder to the file name
+        comment_menu.translation_file = file_name
 
-
-def add_comments(file_name):
-    flush_screen()
-    print('\x1b[6;30;42m' + ' Меню за добавяне на коментари към превода ' + '\x1b[0m')
-    print("За да добавиш нов коментар, изпълни командата \x1b[0;36;40mкоментирай\x1b[0m")
-    print("За да спреш менюто, изпълни командата \x1b[0;36;40mq\x1b[0m")
-    with open(file_name, "a") as f:
-        print("\n---------- КОМЕНТАРИ ----------", file=f)
-        while True:
-            inp = input("> ")
-            if inp == "q": break
-            if inp == "коментирай": 
-                comment = create_comment()
-                print(comment, file=f)
-                print("\x1b[0;36;40m[+]\x1b[0m Коментара беше добавен успешно!\n")
-
-def create_comment():
-    username = input("Име на коментиращия: ")
-    actual_comment = input("Коментар: ")
-    return f"[{username}] коментира: {actual_comment}"
-
+        # Spawn the comment menu instance
+        comment_menu.spawn()
 
 def show_translation(index):
     translations[index - 1].metadata_out()
@@ -160,7 +138,11 @@ if __name__ == '__main__':
         cmd = input("\x1b[0;36;40mМеню: \x1b[0m")
         cmd = cmd.lower()
 
-        if cmd == "помощ": spawn_help()
+        # Show the help menu
+        if cmd == "помощ":
+            help_menu.spawn()
+        
+        
         if cmd == "изход":
             flush_screen() 
             break
@@ -173,8 +155,6 @@ if __name__ == '__main__':
         if "покажи превод" in cmd:
             tokens = cmd.split()
             show_translation(int(tokens[2]))
-
-        
 
 #
 #   == IZPM source code ==
